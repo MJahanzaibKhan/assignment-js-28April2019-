@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+        crossorigin="anonymous">
+
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="row mt-4 mb-4" style="background-color: burlywood; padding-top: 0;">
+            <form action="">
+                <h2 id="getEditDivTitle">Add Record</h2>
+                <table>
+                    <tr style="display: none;">
+                        <td>
+                            <label for="">Index No :</label>
+                            <td>
+                                <input type="text" id="indexNo1" disabled>
+                            </td>
+                        </td>
+                        <tr>
+                            <td>
+                                <label for="">Name :</label>
+                            </td>
+                            <td>
+                                <input type="text" id="std-name">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="">ID :</label>
+                            </td>
+                            <td>
+                                <input type="text" id="std-id">
+                            </td>
+                        </tr>
+                </table>
+                <button type="button" id="getEditBtnTitle" data-toggle="modal" data-target="#exampleModalCenter" class="btn-success btn"
+                    onclick="addRow();">Add</button>
+            </form>
+        </div>
+        <div class="row">
+            <table class="auto-index table table-striped" id="myTable" width="400px" style="text-align: center; padding: 2px; margin: 0px;">
+                <thead id="tHead"></thead>
+                <tbody id="tBody">
+                </tbody>
+
+            </table>
+        </div>
+        <div id="modal-hidden" style="visibility: hidden;">
+
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalCenterTitle"></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <h5 id="modal-msg"></h5>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Ok</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+
+            var dataCollection = { stdName: ["Jahanzaib", "Tabish", "Umair", "Zeeshan", "Tuaha"], stdID: ["1", "2", "3", "4", "5"] };
+
+            var tBodyId = document.getElementById('tBody');
+            var tHeadId = document.getElementById('tHead');
+
+
+            var cTr = document.createElement("tr");
+            cTr.setAttribute("class", "thead-dark");
+
+
+            var cTh1 = document.createElement("th");
+            var th1 = document.createTextNode("INDEX");
+            cTh1.appendChild(th1);
+            cTr.appendChild(cTh1);
+
+            var cTh2 = document.createElement("th");
+            var th2 = document.createTextNode("NAME");
+            cTh2.appendChild(th2);
+            cTr.appendChild(cTh2);
+
+            var cTh3 = document.createElement("th");
+            var th3 = document.createTextNode("ID");
+            cTh3.appendChild(th3);
+            cTr.appendChild(cTh3);
+
+            var cTh4 = document.createElement("th");
+            var th4 = document.createTextNode("");
+            cTh4.setAttribute("colspan", "2");
+            cTh4.appendChild(th4);
+            cTr.appendChild(cTh4);
+
+            tHeadId.appendChild(cTr);
+
+            function createTable() {
+
+                for (let i = 0; i < dataCollection.stdName.length; i++) {
+
+                    var createTr = document.createElement("tr");
+                    createTr.setAttribute('id', i);
+
+                    var createTd1 = document.createElement("td");
+                    var td1 = document.createTextNode(i);
+                    createTd1.appendChild(td1);
+                    createTr.appendChild(createTd1);
+
+                    var createTd2 = document.createElement("td");
+                    var td2 = document.createTextNode(dataCollection.stdName[i]);
+                    createTd2.appendChild(td2);
+                    createTr.appendChild(createTd2);
+
+                    var createTd3 = document.createElement("td");
+                    var td3 = document.createTextNode("Cmad-00" + dataCollection.stdID[i]);
+                    createTd3.appendChild(td3);
+                    createTr.appendChild(createTd3);
+
+                    var createTd4 = document.createElement("td");
+                    var td4 = document.createElement("button");
+
+                    td4.setAttribute("class", "col btn btn-sm btn-danger");
+                    td4.setAttribute("data-target", "#exampleModalCenter");
+                    td4.setAttribute("data-toggle", "modal");
+
+                    td4.innerHTML = "Delete";
+                    td4.setAttribute
+                    td4.addEventListener("click", function () {
+                        deleteRow(i)
+                    })
+                    createTd4.appendChild(td4);
+                    createTr.appendChild(createTd4);
+
+                    var createTd5 = document.createElement("td");
+                    var td5 = document.createElement("button");
+                    td5.setAttribute("class", "col btn btn-sm btn-info");
+                    td5.innerHTML = "Edit";
+                    td5.addEventListener("click", function () {
+                        editRow(i)
+                    })
+
+                    createTd5.appendChild(td5);
+                    createTr.appendChild(createTd5);
+                    tBodyId.appendChild(createTr);
+
+                }
+
+            }
+
+            createTable();
+
+            function deleteRow(rowNum) {
+
+                dataCollection.stdID.splice(rowNum, 1);
+                dataCollection.stdName.splice(rowNum, 1);
+
+                tBodyId.innerHTML = null;
+                var Msg = document.getElementById('modal-msg');
+                Msg.innerText = 'Your Record has been deleted..';
+
+                var modalMsg = document.getElementById('exampleModalCenterTitle');
+                modalMsg.innerText = 'Delete Record';
+
+                modalVisible();
+                createTable();
+            }
+
+            function addRow() {
+
+                var table = document.getElementById("myTable");
+
+                var sName = document.getElementById("std-name").value;
+                var sId = document.getElementById("std-id").value;
+
+                var Msg = document.getElementById('exampleModalCenterTitle');
+                Msg.innerText = 'Add Record';
+
+                if (sName != '' && sId != '') {
+                    tBodyId.innerHTML = null;
+
+                    dataCollection.stdName.push(sName);
+                    dataCollection.stdID.push(sId);
+
+                    createTable();
+
+                    document.getElementById("std-id").value = "";
+                    document.getElementById("std-name").value = "";
+
+                    var modalMsg = document.getElementById('modal-msg');
+                    modalMsg.innerText = 'Your Record has been add..';
+
+                    modalVisible();
+                }
+                else {
+                    var modalMsg = document.getElementById('modal-msg');
+                    modalMsg.innerText = 'Please insert your data..';
+                    modalVisible();
+                }
+            }
+
+            function editRow(iddd) {
+                document.getElementById("getEditDivTitle").innerHTML = "Edit Record";
+                var editBtn = document.getElementById("getEditBtnTitle");
+
+                editBtn.innerHTML = "Update Record";
+                editBtn.setAttribute("onClick", "updateRow()");
+
+                var trr = document.getElementById(iddd);
+
+                var editIndex = trr.firstChild;
+
+                var editName = editIndex.nextSibling;
+
+                var editId = editName.nextSibling.innerHTML.substr(7);
+
+                document.getElementById("indexNo1").value = editIndex.innerHTML;
+                document.getElementById("std-name").value = editName.innerHTML;
+                document.getElementById("std-id").value = editId;
+
+            }
+
+            function updateRow() {
+                var uName = document.getElementById("std-name").value;
+                var uId = document.getElementById("std-id").value;
+                var indx = document.getElementById('indexNo1').value;
+
+                var a = dataCollection.stdName.slice(indx, Number(indx) + 1);
+                var b = dataCollection.stdID.slice(indx, Number(indx) + 1);
+
+                dataCollection.stdName[indx] = uName;
+                dataCollection.stdID[indx] = uId;
+
+                tBodyId.innerHTML = null;
+
+                var Msg = document.getElementById('modal-msg');
+                Msg.innerText = 'Your Record has been Update..';
+
+                var modalMsg = document.getElementById('exampleModalCenterTitle');
+                modalMsg.innerText = 'Update Record';
+
+                document.getElementById("getEditDivTitle").innerHTML = "Add Record";
+                var editBtn = document.getElementById("getEditBtnTitle");
+
+                editBtn.innerHTML = "Add";
+                editBtn.setAttribute("onClick", "addRow()");
+
+                document.getElementById("std-id").value = "";
+                document.getElementById("std-name").value = "";
+
+                createTable();
+                modalVisible();
+
+            }
+            function modalVisible() {
+                var getModalId = document.getElementById('modal-hidden');
+                getModalId.style.visibility = "visible";
+            }
+        </script>
+
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+
+</body>
+
+</html>
